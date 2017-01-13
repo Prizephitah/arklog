@@ -1,0 +1,19 @@
+{
+	"name": "prizephitah/arklog",
+	"description": "Simple tool to log players sessions on an Ark server.",
+	"authors": [
+		{
+			"name": "Björn Hjortsten",
+			"email": "bjorn@hjortsten.com",
+			"role": "Developer"
+		}
+	],
+	"autoload": {
+		"psr-4": {"prizephitah\\ArkLog\\": "src/"}
+	},
+	"require": {
+		"gries/rcon": "^0.0.3",
+		"symfony/console": "^3.2"
+	},
+	"prefer-stable": "true"
+}
