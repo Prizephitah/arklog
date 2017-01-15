@@ -6,3 +6,8 @@ database:
   username:
   password:
   charset: utf8
+
+rcon:
+  host: localhost
+  port: 27020
+  password:
