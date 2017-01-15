@@ -5,6 +5,7 @@ namespace prizephitah\ArkLog\Ark;
 use gries\Rcon\Messenger;
 use gries\Rcon\MessengerFactory;
 use Noodlehaus\Config;
+use prizephitah\ArkLog\Ark\Model\Player;
 
 class Rcon {
 	
@@ -30,7 +31,12 @@ class Rcon {
 		return $this->messenger->send($message, $callable);
 	}
 	
+	/**
+	 * Lists the currently online players
+	 * @return Player[]
+	 */
 	public function listPlayers() {
+		// TODO parse players
 		return $this->send(Command::LIST_PLAYERS);
 	}
 }

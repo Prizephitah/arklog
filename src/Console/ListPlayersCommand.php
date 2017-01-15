@@ -24,6 +24,8 @@ class ListPlayersCommand extends ConfigAwareCommand {
 	}
 	
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		$output->writeln($this->rcon->listPlayers());
+		foreach ($this->rcon->listPlayers() as $player) {
+			$output->writeln($player);
+		}
 	}
 }
