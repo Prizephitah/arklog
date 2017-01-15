@@ -2,39 +2,28 @@
 
 namespace prizephitah\ArkLog\Console;
 
-use gries\Rcon\Messenger;
-use gries\Rcon\MessengerFactory;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
+use prizephitah\ArkLog\Ark\Rcon;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ListPlayersCommand extends Command {
+class ListPlayersCommand extends ConfigAwareCommand {
 	
-	/** @var  Messenger */
-	protected $messenger;
+	/** @var  Rcon */
+	protected $rcon;
 	
 	protected function configure() {
 		$this
 			->setName('listplayers')
 			->setDescription('List the current players')
-			->addArgument('host', InputArgument::REQUIRED, 'The URL or IP of the host to connect to')
-			->addOption('port', 'p', InputOption::VALUE_REQUIRED, 'The port to use for rcon', 27020)
-			->addOption('password', null, InputOption::VALUE_REQUIRED, 'The password of to authenticate with')
 		;
 	}
 	
 	protected function initialize(InputInterface $input, OutputInterface $output) {
-		$this->messenger = MessengerFactory::create(
-			$input->getArgument('host'),
-			$input->getOption('port'),
-			$input->getOption('password')
-		);
+		parent::initialize($input, $output);
+		$this->rcon = new Rcon($this->config);
 	}
 	
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		$response = $this->messenger->send('listplayers');
-		$output->writeln($response);
+		$output->writeln($this->rcon->listPlayers());
 	}
 }
