@@ -13,7 +13,9 @@
 	},
 	"require": {
 		"gries/rcon": "^0.0.3",
-		"symfony/console": "^3.2"
+		"symfony/console": "^3.2",
+		"robmorgan/phinx": "^0.6",
+		"hassankhan/config": "^0.10"
 	},
-	"prefer-stable": "true"
+	"prefer-stable": true
 }
