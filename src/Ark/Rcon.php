@@ -36,7 +36,13 @@ class Rcon {
 	 * @return Player[]
 	 */
 	public function listPlayers() {
-		// TODO parse players
-		return $this->send(Command::LIST_PLAYERS);
+		$playerData = $this->send(Command::LIST_PLAYERS);
+		$matches = [];
+		$players = [];
+		preg_match_all('/\\d+\\.\\s+(.*?),\\s+(\\d+)/', $playerData, $metches);
+		foreach ($matches as $match) {
+			$players[] = new Player($match[1], $match[2]);
+		}
+		return $players;
 	}
 }
