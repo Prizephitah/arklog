@@ -43,7 +43,7 @@ class ArkSessionController extends BasePersistence {
 			ORDER BY updated, created DESC
 			LIMIT 1
 		');
-		$lastUpdated = $this->config->get('log_interval') + 1;
+		$lastUpdated = $this->config->get('log_interval') * 1.5;
 		$lastUpdated = new \DateTime('-'.$lastUpdated.' minutes');
 		$stmt->execute([':playerId' => $playerId, ':updated' => $lastUpdated->format(\DateTime::ISO8601)]);
 		$sessionData = $stmt->fetch();
@@ -68,8 +68,10 @@ class ArkSessionController extends BasePersistence {
 		$stmt = $this->pdo->prepare('
 			INSERT INTO ark_session
 			(player_id, created, updated)
-			VALUES (:playerId, NOW(), NOW())
+			VALUES (:playerId, :created, :updated)
 		');
+		$created = new DateTime();
+		$updated = new DateTime('+'.($this->config->get('log_interval') / 2).' minutes');
 		$stmt->execute([':playerId' => $playerId]);
 		return $this->getCurrentSession($playerId);
 	}
