@@ -21,6 +21,39 @@ class ArkPlayerController extends BasePersistence {
 	}
 
 	/**
+	 * Gets all recently updated player.
+	 * @param  DateTime $limit The limit of what's recent. Defaults to the last 24 hours.
+	 * @return ArkPlayer[]
+	 */
+	public function getRecentlyUpdatedPlayers(\DateTime $limit = null) {
+		if ($limit === null) {
+			$limit = new DateTime('-24 hours');
+		}
+		$stmt = $this->pdo->prepare('
+			SELECT id, steam_id, nickname, created, updated
+			FROM ark_player
+			WHERE created >= :limitCreated OR updated >= :limitUpdated
+		');
+		$stmt->execute([
+			':limitCreated' => $limit->format(\DateTime::ISO8601),
+			':limitUpdated' => $limit->format(\DateTime::ISO8601)
+		]);
+
+		$players = [];
+		while ($playerData = $stmt->fetch()) {
+			$players[] = new ArkPlayer(
+				$playerData['id'],
+				$playerData['nickname'],
+				$playerData['steam_id'],
+				new \DateTime($playerData['created']),
+				$playerData['updated'] == null ?: new \DateTime($playerData['updated'])
+			);
+		}
+
+		return $players;
+	}
+
+	/**
 	 * Gets a registered player by their id.
 	 * @param int $id
 	 * @return null|ArkPlayer Returns null if not found.

@@ -27,6 +27,38 @@ class ArkSessionController extends BasePersistence {
 	}
 
 	/**
+	 * Gets all recent sessions.
+	 * @param  DateTime $limit The limit of what's recent. Defaults to the last 24 hours.
+	 * @return ArkSession[]
+	 */
+	public function getRecentSessions(\DateTime $limit = null) {
+		if ($limit === null) {
+			$limit = new DateTime('-24 hours');
+		}
+		$stmt = $this->pdo->prepare('
+			SELECT id, player_id, created, updated
+			FROM ark_session
+			WHERE created >= :limitCreated OR updated >= :limitUpdated
+		');
+		$stmt->execute([
+			':limitCreated' => $limit->format(\DateTime::ISO8601),
+			':limitUpdated' => $limit->format(\DateTime::ISO8601)
+		]);
+
+		$sessions = [];
+		while ($sessionData = $stmt->fetch()) {
+			$sessions[] = new ArkSession(
+				$sessionData['id'],
+				$sessionData['player_id'],
+				new \DateTime($sessionData['created']),
+				new \DateTime($sessionData['updated'])
+			);
+		}
+
+		return $sessions;
+	}
+
+	/**
 	 * Gets a session for the specified player updated within the configured log interval.
 	 *
 	 * Log interval automatically adjusted for small deviations in run time.
