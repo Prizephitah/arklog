@@ -2,6 +2,7 @@
 <?php
 
 use prizephitah\ArkLog\Console\ListPlayersCommand;
+use prizephitah\ArkLog\Console\ArkLogCommand;
 use Symfony\Component\Console\Application;
 
 require_once __DIR__.'/../vendor/autoload.php';
@@ -9,5 +10,6 @@ require_once __DIR__.'/../vendor/autoload.php';
 $application = new Application();
 
 $application->add(new ListPlayersCommand());
+$application->add(new ArkLogCommand());
 
 $application->run();

@@ -8,18 +8,18 @@ use prizephitah\ArkLog\Ark\Model\Player;
 use prizephitah\ArkLog\Persistence\Model\ArkPlayer;
 
 class ArkPlayerController extends BasePersistence {
-	
+
 	public function register(Player $player) {
-		$existingPlayer = $this->getPlayerBySteamId($player);
+		$existingPlayer = $this->getPlayerBySteamId($player->getSteamId());
 		if (!$existingPlayer) {
 			$existingPlayer = $this->create($player);
 		} else {
 			$existingPlayer = $this->update($existingPlayer->getId(), $player);
 		}
-		
+
 		return $existingPlayer;
 	}
-	
+
 	/**
 	 * Gets a registered player by their id.
 	 * @param int $id
@@ -36,7 +36,7 @@ class ArkPlayerController extends BasePersistence {
 		if (!$playerData) {
 			return null;
 		}
-		
+
 		return new ArkPlayer(
 			$playerData['id'],
 			$playerData['nickname'],
@@ -45,7 +45,7 @@ class ArkPlayerController extends BasePersistence {
 			$playerData['updated'] != null ? new \DateTime($playerData['updated']) : null
 		);
 	}
-	
+
 	/**
 	 * Gets a registered player by their Steam id.
 	 * @param int $steamId
@@ -64,7 +64,7 @@ class ArkPlayerController extends BasePersistence {
 		}
 		return $this->getPlayer($playerId);
 	}
-	
+
 	/**
 	 * Persists a new and previously unknown ArkPlayer.
 	 * @param Player $player
@@ -79,7 +79,7 @@ class ArkPlayerController extends BasePersistence {
 		$stmt->execute([':steamId' => $player->getSteamId(), ':nickName' => $player->getNickName()]);
 		return $this->getPlayerBySteamId($player->getSteamId());
 	}
-	
+
 	public function update($id, Player $player) {
 		$stmt = $this->pdo->prepare('
 			UPDATE ark_player

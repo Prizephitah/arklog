@@ -8,7 +8,7 @@ use prizephitah\ArkLog\Persistence\Model\ArkPlayer;
 use prizephitah\ArkLog\Persistence\Model\ArkSession;
 
 class ArkSessionController extends BasePersistence {
-	
+
 	/**
 	 * Registers a session for a player.
 	 *
@@ -25,7 +25,7 @@ class ArkSessionController extends BasePersistence {
 		}
 		return $session;
 	}
-	
+
 	/**
 	 * Gets a session for the specified player updated within the configured log interval.
 	 *
@@ -37,20 +37,20 @@ class ArkSessionController extends BasePersistence {
 		$stmt = $this->pdo->prepare('
 			SELECT id, player_id, created, updated
 			FROM ark_session
-			WHERE 
-				player_id = :playerId 
+			WHERE
+				player_id = :playerId
 				AND updated >= :updated
 			ORDER BY updated, created DESC
 			LIMIT 1
 		');
 		$lastUpdated = $this->config->get('log_interval') + 1;
 		$lastUpdated = new \DateTime('-'.$lastUpdated.' minutes');
-		$stmt->execute([':playerId' => $playerId, ':updated' >= $lastUpdated->format(\DateTime::ISO8601)]);
+		$stmt->execute([':playerId' => $playerId, ':updated' => $lastUpdated->format(\DateTime::ISO8601)]);
 		$sessionData = $stmt->fetch();
 		if (!$sessionData) {
 			return null;
 		}
-		
+
 		return new ArkSession(
 			$sessionData['id'],
 			$sessionData['player_id'],
@@ -58,7 +58,7 @@ class ArkSessionController extends BasePersistence {
 			$sessionData['updated'] != null ? new \DateTime($sessionData['updated']) : null
 		);
 	}
-	
+
 	/**
 	 * Creates a new session for the specified player id.
 	 * @param int $playerId
@@ -70,10 +70,10 @@ class ArkSessionController extends BasePersistence {
 			(player_id, created, updated)
 			VALUES (:playerId, NOW(), NOW())
 		');
-		$stmt->execute([':playerId', $playerId]);
+		$stmt->execute([':playerId' => $playerId]);
 		return $this->getCurrentSession($playerId);
 	}
-	
+
 	/**
 	 * Updates a session.
 	 * @param ArkSession $session
