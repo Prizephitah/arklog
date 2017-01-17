@@ -27,7 +27,7 @@ class ListPlayersCommand extends ConfigAwareCommand {
 		$players = $this->rcon->listPlayers();
 		if (!empty($players)) {
 			foreach ($players as $player) {
-				$output->writeln($player);
+				$output->writeln((string)$player);
 			}
 		} else {
 			$output->writeln('No players connected');

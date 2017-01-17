@@ -8,12 +8,12 @@ use Noodlehaus\Config;
 use prizephitah\ArkLog\Ark\Model\Player;
 
 class Rcon {
-	
+
 	/**
 	 * @var Messenger
 	 */
 	protected $messenger;
-	
+
 	public function __construct(Config $config) {
 		$this->messenger = MessengerFactory::create(
 			$config->get('rcon.host', 'localhost'),
@@ -21,7 +21,7 @@ class Rcon {
 			$config->get('rcon.password', null)
 		);
 	}
-	
+
 	/**
 	 * @param string $message
 	 * @param callable|null $callable
@@ -30,7 +30,7 @@ class Rcon {
 	public function send($message, $callable = null) {
 		return $this->messenger->send($message, $callable);
 	}
-	
+
 	/**
 	 * Lists the currently online players
 	 * @return Player[]
@@ -39,7 +39,7 @@ class Rcon {
 		$playerData = $this->send(Command::LIST_PLAYERS);
 		$matches = [];
 		$players = [];
-		preg_match_all('/\\d+\\.\\s+(.*?),\\s+(\\d+)/', $playerData, $metches);
+		preg_match_all('/\\d+\\.\\s+(.*?),\\s+(\\d+)/', $playerData, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
 			$players[] = new Player($match[1], $match[2]);
 		}
