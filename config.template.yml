@@ -12,4 +12,10 @@ rcon:
   port: 27020
   password:
 
+web:
+  displayErrorDetails: false
+  routerCacheFile: false
+
 log_interval: 3
+debug: false
+cache: ./cache
