@@ -1,0 +1,26 @@
+{
+  "name": "ark-log",
+  "description": "The frontend dependencies for ArkLog",
+  "author": {
+    "name": "Björn Hjortsten",
+    "email": "bjorn@hjortsten.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Prizephitah/arklog.git"
+  },
+  "private": true,
+  "devDependencies": {
+    "bootstrap": "^3.3.7",
+    "browserify": "^13.3.0",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.3.2",
+    "gulp-clone": "^1.0.0",
+    "gulp-less": "^3.3.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^2.4.0",
+    "gulp-uglify": "^2.0.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}

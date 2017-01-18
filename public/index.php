@@ -20,4 +20,6 @@ $container['config'] = function ($container) use ($config) {
   return $config;
 };
 
+$slim->get('/', HomeController::class.':home')->setName('home');
+
 $slim->run();
