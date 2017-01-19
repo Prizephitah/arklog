@@ -1,0 +1,20 @@
+{% extends "base.twig.html" %}
+
+{% block content %}
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <div class="navbar-brand">
+        <span>ArkLog</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <h1>Recently active players</h1>
+  <div id="chart" data-players='{{ players|raw }}'
+    data-sessions='{{ sessions|raw }}' data-start="{{ start }}"
+    data-end="{{ end }}"></div>
+</div>
+{% endblock %}
