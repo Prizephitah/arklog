@@ -11,10 +11,11 @@
   </head>
   <body>
     {% block content %}{% endblock %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     {% if config.debug %}
-      <script src="js/app.js">
+      <script type="text/javascript" src="js/app.js"></script>
     {% else %}
-      <script src="js/app.min.js">
+      <script type="text/javascript" src="js/app.min.js"></script>
     {% endif %}
   </body>
 </html>

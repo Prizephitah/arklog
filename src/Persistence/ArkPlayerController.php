@@ -27,7 +27,7 @@ class ArkPlayerController extends BasePersistence {
 	 */
 	public function getRecentlyUpdatedPlayers(\DateTime $limit = null) {
 		if ($limit === null) {
-			$limit = new DateTime('-24 hours');
+			$limit = new \DateTime('-24 hours');
 		}
 		$stmt = $this->pdo->prepare('
 			SELECT id, steam_id, nickname, created, updated

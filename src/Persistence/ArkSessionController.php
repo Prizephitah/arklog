@@ -33,7 +33,7 @@ class ArkSessionController extends BasePersistence {
 	 */
 	public function getRecentSessions(\DateTime $limit = null) {
 		if ($limit === null) {
-			$limit = new DateTime('-24 hours');
+			$limit = new \DateTime('-24 hours');
 		}
 		$stmt = $this->pdo->prepare('
 			SELECT id, player_id, created, updated
