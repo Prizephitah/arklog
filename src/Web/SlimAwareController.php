@@ -22,5 +22,6 @@ class SlimAwareController {
     $this->config = $container->config;
     $this->view = $container->view;
     $this->view['config'] = $this->config;
+    $this->view['basePath'] = $this->container->request->getUri()->getBasePath();
   }
 }
