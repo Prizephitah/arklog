@@ -17,5 +17,6 @@ web:
   routerCacheFile: false
 
 log_interval: 3
+password:
 debug: false
 cache: ./cache

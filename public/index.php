@@ -2,6 +2,8 @@
 
 use Noodlehaus\Config;
 use prizephitah\ArkLog\Web\HomeController;
+use prizephitah\ArkLog\Web\Security\LoginController;
+use prizephitah\ArkLog\Web\Security\SimplePasswordAuthenticationMiddleware;
 
 require_once '../vendor/autoload.php';
 
@@ -32,7 +34,22 @@ $container['view'] = function ($container) use ($config) {
 
     return $view;
 };
+$container['session'] = function ($container) {
+  return new \SlimSession\Helper;
+};
 
-$slim->get('/', HomeController::class.':home')->setName('home');
+$slim->add(new \Slim\Middleware\Session([
+  'name' => 'ARKLOG_SESSION',
+  'autorefresh' => true,
+  'lifetime' => '20 minutes'
+]));
+
+$slim->get('/', HomeController::class.':home')
+  ->setName('home')
+  ->add(new SimplePasswordAuthenticationMiddleware($container));
+$slim->get('/login/', LoginController::class.':login')
+  ->setName('login');
+$slim->post('/authenticate/', LoginController::class.':authenticate')
+  ->setName('authenticate');
 
 $slim->run();
