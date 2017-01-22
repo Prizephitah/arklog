@@ -1,15 +1,52 @@
 #!/usr/bin/env php
 <?php
 
+use Monolog\ErrorHandler;
+use Monolog\Logger;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\RotatingFileHandler;
+use Noodlehaus\Config;
 use prizephitah\ArkLog\Console\ListPlayersCommand;
 use prizephitah\ArkLog\Console\ArkLogCommand;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Event\ConsoleExceptionEvent;
+use Symfony\Component\Console\ConsoleEvents;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-$application = new Application();
+$config = new Config(__DIR__.'/../config.yml');
 
-$application->add(new ListPlayersCommand());
-$application->add(new ArkLogCommand());
+$logger = new Logger('console');
+$handler = new RotatingFileHandler(
+  __DIR__.'/../logs/arklog.log',
+  7,
+  $config->get('debug') ? Logger::DEBUG : Logger::ERROR,
+  true,
+  0777,
+  true
+);
+$formatter = new LineFormatter();
+$formatter->includeStacktraces(true);
+$handler->setFormatter($formatter);
+$logger->pushHandler($handler);
+ErrorHandler::register($logger);
 
-$application->run();
+try {
+  $application = new Application();
+
+  $dispatcher = new EventDispatcher();
+  $dispatcher->addListener(ConsoleEvents::EXCEPTION, function (ConsoleExceptionEvent $event) use ($logger) {
+    $exception = $event->getException();
+    $logger->error(get_class($exception).': '.$exception->getMessage(), ['e' => $exception]);
+  });
+  $application->setDispatcher($dispatcher);
+
+  $application->add(new ListPlayersCommand($config, $logger));
+  $application->add(new ArkLogCommand($config, $logger));
+
+  $application->run();
+} catch (\Throwable $e) {
+  $logger->error(get_class($e).': '.$e->getMessage(), ['e' => $e]);
+  throw $e;
+}
