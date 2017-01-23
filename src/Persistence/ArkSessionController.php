@@ -41,8 +41,8 @@ class ArkSessionController extends BasePersistence {
 			WHERE created >= :limitCreated OR updated >= :limitUpdated
 		');
 		$stmt->execute([
-			':limitCreated' => $limit->format(\DateTime::ISO8601),
-			':limitUpdated' => $limit->format(\DateTime::ISO8601)
+			':limitCreated' => $limit->format('Y-m-d H:i:s'),
+			':limitUpdated' => $limit->format('Y-m-d H:i:s')
 		]);
 
 		$sessions = [];
@@ -77,7 +77,7 @@ class ArkSessionController extends BasePersistence {
 		');
 		$lastUpdated = $this->config->get('log_interval') * 1.5;
 		$lastUpdated = new \DateTime('-'.$lastUpdated.' minutes');
-		$stmt->execute([':playerId' => $playerId, ':updated' => $lastUpdated->format(\DateTime::ISO8601)]);
+		$stmt->execute([':playerId' => $playerId, ':updated' => $lastUpdated->format('Y-m-d H:i:s')]);
 		$sessionData = $stmt->fetch();
 		if (!$sessionData) {
 			return null;
@@ -102,9 +102,13 @@ class ArkSessionController extends BasePersistence {
 			(player_id, created, updated)
 			VALUES (:playerId, :created, :updated)
 		');
-		$created = new DateTime();
-		$updated = new DateTime('+'.($this->config->get('log_interval') / 2).' minutes');
-		$stmt->execute([':playerId' => $playerId]);
+		$created = new \DateTime();
+		$updated = new \DateTime('+'.($this->config->get('log_interval') / 2).' minutes');
+		$stmt->execute([
+			':playerId' => $playerId,
+			':created' => $created->format('Y-m-d H:i:s'),
+			':updated' => $updated->format('Y-m-d H:i:s')
+		]);
 		return $this->getCurrentSession($playerId);
 	}
 

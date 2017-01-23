@@ -35,8 +35,8 @@ class ArkPlayerController extends BasePersistence {
 			WHERE created >= :limitCreated OR updated >= :limitUpdated
 		');
 		$stmt->execute([
-			':limitCreated' => $limit->format(\DateTime::ISO8601),
-			':limitUpdated' => $limit->format(\DateTime::ISO8601)
+			':limitCreated' => $limit->format('Y-m-d H:i:s'),
+			':limitUpdated' => $limit->format('Y-m-d H:i:s')
 		]);
 
 		$players = [];
