@@ -76,7 +76,7 @@ class ArkSessionController extends BasePersistence {
 			LIMIT 1
 		');
 		$lastUpdated = $this->config->get('log_interval') * 1.5;
-		$lastUpdated = new \DateTime('-'.$lastUpdated.' minutes');
+		$lastUpdated = new \DateTime('-'.ceil($lastUpdated).' minutes');
 		$stmt->execute([':playerId' => $playerId, ':updated' => $lastUpdated->format('Y-m-d H:i:s')]);
 		$sessionData = $stmt->fetch();
 		if (!$sessionData) {
