@@ -56,12 +56,12 @@ module.exports = {
     jQuery.each(sessions, function() {
       rows.push([
         self.getPlayer(this.playerId, players).nickName,
-        null,
+        '',
         this.created,
         this.updated
       ]);
     });
-    
+
     Array.prototype.push.apply(rows, this.getDays(this.getStart(), this.getEnd()));
 
     return rows;
