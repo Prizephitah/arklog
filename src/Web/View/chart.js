@@ -1,9 +1,20 @@
 module.exports = {
+  days: {
+    0: 'Sunday',
+    1: 'Monday',
+    2: 'Tuesday',
+    3: 'Wednesday',
+    4: 'Thursday',
+    5: 'Friday',
+    6: 'Saturday'
+  },
+
   draw: function() {
     self = require('./chart.js');
     // Create the data table.
     var data = new google.visualization.DataTable();
     data.addColumn({ type: "string", id: "Name" });
+    data.addColumn({ type: "string", id: "Day" });
     data.addColumn({ type: "date", id: "Start" });
     data.addColumn({ type: "date", id: "End" });
     data.addRows(self.fetchRows());
@@ -45,10 +56,13 @@ module.exports = {
     jQuery.each(sessions, function() {
       rows.push([
         self.getPlayer(this.playerId, players).nickName,
+        null,
         this.created,
         this.updated
       ]);
     });
+    
+    Array.prototype.push.apply(rows, this.getDays(this.getStart(), this.getEnd()));
 
     return rows;
   },
@@ -91,5 +105,33 @@ module.exports = {
   getEnd: function() {
     var jQuery = require('jquery');
     return new Date(jQuery("#chart").data('end'));
+  },
+
+  getDays: function(start, end) {
+    var days = [],
+      day = new Date(end.getTime());
+    while (day >= start) {
+      var dayStart = new Date(day.getTime()),
+        dayEnd = new Date(day.getTime());
+
+      dayStart.setHours(0, 0, 0, 0);
+      dayEnd.setHours(23, 59, 59, 999);
+      if (dayEnd > end) {
+        dayEnd = new Date(end.getTime());
+      }
+      if (dayStart < start) {
+        dayStart = new Date(start.getTime());
+      }
+
+      days.push([
+        'Day',
+        this.days[day.getDay()],
+        dayStart,
+        dayEnd
+      ]);
+
+      day.setDate(day.getDate() - 1);
+    }
+    return days;
   }
 };
