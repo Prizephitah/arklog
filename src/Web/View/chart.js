@@ -10,6 +10,10 @@ module.exports = {
   },
 
   draw: function() {
+    if (jQuery('#chart').length < 1) {
+      return;
+    }
+
     self = require('./chart.js');
     // Create the data table.
     var data = new google.visualization.DataTable();
