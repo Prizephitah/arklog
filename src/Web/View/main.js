@@ -1,3 +1,4 @@
+require('./Polyfill/Array.find.js')();
 global.jQuery = require('jquery');
 var bootstrap = require('bootstrap'),
   material = require('bootstrap-material-design'),

@@ -98,7 +98,7 @@ module.exports = {
   getPlayer: function(id, players) {
     return players.find(function(player) {
       return player.id == id;
-    }) || 'Unknown';
+    }) || { nickName: 'Unknown' };
   },
 
   getStart: function() {
